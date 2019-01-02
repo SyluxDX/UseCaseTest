@@ -1,0 +1,9 @@
+{
+    "path": ".",
+    "workdir": "workdir",
+    "testsFolder": "tests",
+    "versionsFolder": "versions",
+    "reportFolder": "report",
+    "useConfig": "useconfig.json",
+    "useStart": "stuff.py"
+}

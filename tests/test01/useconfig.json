@@ -1,0 +1,4 @@
+{
+    "runType": "single",
+    "entrypoint": "simple.py"
+}
