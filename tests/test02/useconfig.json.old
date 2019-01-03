@@ -1,0 +1,6 @@
+{
+    "runType": "cronjob",
+    "entrypoint": "time.py",
+    "interval": 2,
+    "numRuns": 10
+}

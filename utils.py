@@ -1,6 +1,8 @@
 """ Auxiliar Functons """
 import os
+import time
 import shutil
+
 
 def get_files(path):
     """ List files in a folder, designed by path """
@@ -24,7 +26,9 @@ def check_folders(folders):
 
 def overload_config(configs, args):
     """ Overloads configurations with arguments inputs, and join global path to all folders """
-    configs['quiet'] = args.quiet
+
+    configs['verbose'] = args.verbose
+    # configs['quiet'] = args.quiet
     if args.path:
         configs['path'] = args.path
 
@@ -47,6 +51,9 @@ def overload_config(configs, args):
         configs['reportFolder'] = os.path.join(configs['path'], args.report)
     else:
         configs['reportFolder'] = os.path.join(configs['path'], configs['reportFolder'])
+    # add report name
+    configs['reportFile'] = os.path.join(configs['reportFolder']\
+        , '{}.log'.format(time.strftime("%Y-%m-%d_%H%M%S", time.gmtime())))
 
     if args.useconfig:
         configs['useConfig'] = args.useconfig
