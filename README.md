@@ -60,7 +60,7 @@ These configurations have the following possible fields:
 }
 ```
 
-##"# Cronjob mode
+### Cronjob mode
 ```json
 {
     "runType": "cronjob",
