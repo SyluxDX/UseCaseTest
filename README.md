@@ -3,7 +3,7 @@
 Test use cases define in script with configurations
 
 ### ToDo
- - Use option --quiet and kill all test output, leving only script final results
+ - Add clean field to main configuration
 
  ## Description
  Cycle throught every Versions, copy to Work Directory, and run all test's scripts.
@@ -44,12 +44,12 @@ The Use tests can be runned in one the following configuraions:
  - cronjob: Run test script multiple times and exit.
 
 These configurations have the following possible fields:
-| Field Name | Description |
-| --- | --- |
-| runType | indicate the test run mode |
-| entrypoint | test main script |
-| interval | interval, in seconds, between runs |
-| numRuns | Total number of runs |
+| Field Name | Required in | Type | Description |
+| --- | --- | --- | --- |
+| runType | single, cronjob | string | indicate the test run mode, must be single or cronjob |
+| entrypoint | single, cronjob | string | test main script |
+| interval | cronjob | int | interval, in seconds, between runs |
+| numRuns | cronjob | int | Total number of runs |
 
 ### Configuration examples
 #### Single mode

@@ -28,7 +28,8 @@ def overload_config(configs, args):
     """ Overloads configurations with arguments inputs, and join global path to all folders """
 
     configs['verbose'] = args.verbose
-    # configs['quiet'] = args.quiet
+    configs['quiet'] = args.quiet
+    
     if args.path:
         configs['path'] = args.path
 
@@ -57,10 +58,6 @@ def overload_config(configs, args):
 
     if args.useconfig:
         configs['useConfig'] = args.useconfig
-    # if args.startscript:
-    #     configs['useStart'] = os.path.join(configs['path'], args.startscript)
-    # else:
-    #     configs['useStart'] = os.path.join(configs['path'], configs['useStart'])
 
 def copy_dir(src, dst, clear=False):
     """ Copy files in folder src to folder dst """

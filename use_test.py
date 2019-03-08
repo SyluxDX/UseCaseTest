@@ -31,7 +31,8 @@ def run_tests():
         utils.copy_dir(os.path.join(CONFIG['versionsFolder'], version), CONFIG['workdir'], True)
         # cycle throught use case
         for usecase in utils.get_dirs(CONFIG['testsFolder']):
-            print('UseCase test: {}'.format(usecase))
+            if not CONFIG['quiet']:
+                print('UseCase test: {}'.format(usecase))
             log_msg('info', 'UseCase test: {}'.format(usecase))
             try:
                 folder = os.path.join(CONFIG['testsFolder'], usecase)
@@ -43,24 +44,28 @@ def run_tests():
                     subprocess.run(cmd, stdout=stdout, stderr=subprocess.PIPE, check=True)
                 else:
                     for step in range(jconfig['numRuns']):
-                        print('\r   >Step {}/{}      '.format(step+1, jconfig['numRuns'])\
-                            , end='', flush=True)
+                        if not CONFIG['quiet']:
+                            print('\r   >Step {}/{}      '.format(step+1, jconfig['numRuns'])\
+                                , end='', flush=True)
                         log_msg('info', 'Step {}/{}'.format(step+1, jconfig['numRuns']) )
                         subprocess.run(cmd, stdout=stdout, stderr=subprocess.PIPE, check=True)
                         if step+1 != jconfig['numRuns']:
                             time.sleep(jconfig['interval'])
             except subprocess.CalledProcessError as excp:
-                print('Error msg:{}'\
-                    .format(excp.stderr.decode().replace('\r', '').replace('\n', '|')))
+                if not CONFIG['quiet']:
+                    print('Error msg:{}'\
+                        .format(excp.stderr.decode().replace('\r', '').replace('\n', '|')))
                 log_msg('error', excp.stderr.decode())
             else:
                 valid += 1
-                print('{}.....Passed'.format(usecase))
+                if not CONFIG['quiet']:
+                    print('{}.....Passed'.format(usecase))
                 log_msg('info', '{} Passed'.format(usecase))
 
     elapse = time.time()-start
-    log_msg('info', 'Ran {} tests in {:.3f}a'.format(total, elapse))
-    print('Ran {} tests in {:.3f}s'.format(total, elapse))
+    log_msg('info', 'Ran {} tests in {:.3f}s with {} passed'.format(total, elapse, valid))
+    print('-'*20)
+    print('Ran {} tests in {:.3f}s with {} passed.'.format(total, elapse, valid))
     return total-valid
 
 
@@ -73,8 +78,8 @@ if __name__ == "__main__":
     ARG_PARSER = argparse.ArgumentParser(description='Run UseCase tests')
     ARG_PARSER.add_argument('-v', '--verbose'\
         , help='Increase output Verbosity', action='store_true')
-    # ARG_PARSER.add_argument('-q', '--quiet'\
-    #     , help='Decrease output Verbosity', action='store_true')
+    ARG_PARSER.add_argument('-q', '--quiet'\
+        , help='Decrease output Verbosity', action='store_true')
     ARG_PARSER.add_argument('-p', '--path'\
         , help='Global script path')
     ARG_PARSER.add_argument('-w', '--workdir'\
