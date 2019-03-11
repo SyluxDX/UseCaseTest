@@ -29,7 +29,8 @@ def overload_config(configs, args):
 
     configs['verbose'] = args.verbose
     configs['quiet'] = args.quiet
-    
+    configs['clearWorkdir'] = args.keep_workdir
+
     if args.path:
         configs['path'] = args.path
 
@@ -62,7 +63,9 @@ def overload_config(configs, args):
 def copy_dir(src, dst, clear=False):
     """ Copy files in folder src to folder dst """
     if clear:
-        for filename in get_files(dst):
-            os.remove(os.path.join(dst, filename))
+        shutil.rmtree(dst)
+        os.makedirs(dst)
+        # for filename in get_files(dst):
+        #     os.remove(os.path.join(dst, filename))
     for filename in get_files(src):
         shutil.copy(os.path.join(src, filename), dst)

@@ -3,7 +3,7 @@
 Test use cases define in script with configurations
 
 ### ToDo
- - Add clean field to main configuration
+ - Add option to copy files/all workdir to a output folder
 
  ## Description
  Cycle throught every Versions, copy to Work Directory, and run all test's scripts.
@@ -49,7 +49,9 @@ These configurations have the following possible fields:
 | runType | single, cronjob | string | indicate the test run mode, must be single or cronjob |
 | entrypoint | single, cronjob | string | test main script |
 | interval | cronjob | int | interval, in seconds, between runs |
-| numRuns | cronjob | int | Total number of runs |
+| numRuns | cronjob | int | total number of runs |
+| clearWorkdir | single, cronjob | bool | clear workdir before running test  |
+
 
 ### Configuration examples
 #### Single mode

@@ -20,6 +20,7 @@ def log_msg(level, msg):
 def run_tests():
     """ Run use case tests """
     os.environ['WORKDIR'] = CONFIG['workdir']
+    os.environ['REPORTDIR'] = CONFIG['reportFolder']
     stdout = subprocess.DEVNULL
     if CONFIG['verbose']:
         stdout = None
@@ -28,9 +29,12 @@ def run_tests():
     valid = 0
     start = time.time()
     for version in utils.get_dirs(CONFIG['versionsFolder']):
-        utils.copy_dir(os.path.join(CONFIG['versionsFolder'], version), CONFIG['workdir'], True)
+        os.environ['VERSION'] = version
+        utils.copy_dir(os.path.join(CONFIG['versionsFolder'], version), CONFIG['workdir']\
+            , CONFIG['clearWorkdir'])
         # cycle throught use case
         for usecase in utils.get_dirs(CONFIG['testsFolder']):
+            os.environ['TESTDIR'] = usecase
             if not CONFIG['quiet']:
                 print('UseCase test: {}'.format(usecase))
             log_msg('info', 'UseCase test: {}'.format(usecase))
@@ -38,6 +42,12 @@ def run_tests():
                 folder = os.path.join(CONFIG['testsFolder'], usecase)
                 with open(os.path.join(folder, CONFIG['useConfig'])) as usefp:
                     jconfig = json.load(usefp)
+                # clear workdir if desired
+                if 'clearWorkdir' in jconfig.keys() and jconfig['clearWorkdir']:
+                    utils.copy_dir(os.path.join(CONFIG['versionsFolder'], version)\
+                        , CONFIG['workdir'], CONFIG['clearWorkdir'])
+                    # print('clearing')
+                    # raise
                 cmd = ['py', os.path.join(folder, jconfig['entrypoint'])]
                 total += 1
                 if jconfig['runType'] == 'single':
@@ -47,7 +57,7 @@ def run_tests():
                         if not CONFIG['quiet']:
                             print('\r   >Step {}/{}      '.format(step+1, jconfig['numRuns'])\
                                 , end='', flush=True)
-                        log_msg('info', 'Step {}/{}'.format(step+1, jconfig['numRuns']) )
+                        log_msg('info', 'Step {}/{}'.format(step+1, jconfig['numRuns']))
                         subprocess.run(cmd, stdout=stdout, stderr=subprocess.PIPE, check=True)
                         if step+1 != jconfig['numRuns']:
                             time.sleep(jconfig['interval'])
@@ -92,6 +102,8 @@ if __name__ == "__main__":
         , help='Result Report folder, will be added to global path')
     ARG_PARSER.add_argument('-u', '--useconfig'\
         , help='Use Case configuration name')
+    ARG_PARSER.add_argument('--keep-workdir'\
+        , help='Don\'t clear workdir before copying version', action='store_false')
 
     ARGS = ARG_PARSER.parse_args()
     # update configs
